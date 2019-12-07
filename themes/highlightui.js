@@ -83,6 +83,14 @@ export default class HighlightUI extends Plugin {
       itemDefinitions.add(definition);
     }
 
+    itemDefinitions.add({
+      type: "button",
+      model: new Model({
+        label: "стереть",
+        withText: true
+      })
+    });
+
     return itemDefinitions;
   }
 }

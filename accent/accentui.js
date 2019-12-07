@@ -19,16 +19,14 @@ export default class AccentUI extends Plugin {
       const buttonView = new ButtonView(locale);
 
       buttonView.set({
-        label: t("accent"),
+        label: t("Ударение"),
         withText: false,
         icon:
           '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="5" y="20" style="font-size:21px;">а́</text></svg>',
         tooltip: true
       });
 
-      this.listenTo(buttonView, "execute", () =>
-        editor.execute("accent")
-      );
+      this.listenTo(buttonView, "execute", () => editor.execute("accent"));
 
       return buttonView;
     });

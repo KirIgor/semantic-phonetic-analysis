@@ -116,7 +116,6 @@ function _buildDefinition(options) {
     definition.model.values.push(option.model);
     definition.view[option.model] = {
       name: "mark",
-      classes: "tooltip",
       styles: {
         "background-color": option.color
       },

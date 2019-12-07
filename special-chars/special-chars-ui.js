@@ -16,20 +16,22 @@ export default class SpecialCharsUI extends Plugin {
 
     const command = editor.commands.get("specialChars");
 
-    "ўγhwl'\"".split('').forEach((e,i) => {
-      componentFactory.add("specialChar"+(i+1), locale => {
+    "ўγhwl'\"".split("").forEach((e, i) => {
+      componentFactory.add("specialChar" + (i + 1), locale => {
         const buttonView = new ButtonView(locale);
 
         buttonView.set({
-          label: t("special char "+(i+1)),
+          label: t("Специальный символ " + (i + 1)),
           withText: false,
           icon:
-            '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="5" y="20" style="font-size:21px;">'+e+'</text></svg>',
+            '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="5" y="20" style="font-size:21px;">' +
+            e +
+            "</text></svg>",
           tooltip: true
         });
 
         this.listenTo(buttonView, "execute", () =>
-          editor.execute("specialChars",{symbol: e})
+          editor.execute("specialChars", { symbol: e })
         );
 
         return buttonView;

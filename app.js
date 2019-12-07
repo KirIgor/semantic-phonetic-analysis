@@ -17,6 +17,8 @@ import Highlight from "./themes/highlight";
 import Accent from "./accent/accent";
 import SpecialChars from "./special-chars/special-chars";
 
+import "@ckeditor/ckeditor5-build-classic/build/translations/ru.js";
+
 ClassicEditor.create(document.querySelector("#editor"), {
   plugins: [
     Essentials,
@@ -52,7 +54,8 @@ ClassicEditor.create(document.querySelector("#editor"), {
       { model: "родня", color: "#fedcbaf0", type: "marker" },
       { model: "дом", color: "#cdabeff0", type: "marker" }
     ]
-  }
+  },
+  language: "ru"
 })
   .then(editor => {
     console.log("Editor was initialized", editor);
