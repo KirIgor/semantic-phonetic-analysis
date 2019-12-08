@@ -24,7 +24,7 @@ export default class SpecialCharsUI extends Plugin {
           label: t("Специальный символ " + (i + 1)),
           withText: false,
           icon:
-            '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="5" y="20" style="font-size:21px;">' +
+            '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="5" y="20" style="font-size:21px;font-family:Arial;">' +
             e +
             "</text></svg>",
           tooltip: true

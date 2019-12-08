@@ -1,8 +1,8 @@
-import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
 import Superscript from "@ckeditor/ckeditor5-basic-styles/src/superscript";
 import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
 import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
+import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold";
 
 import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
 import {
@@ -14,24 +14,29 @@ import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
 
 import InterviewItem from "./interview-item/interview-item";
 import Highlight from "./themes/highlight";
-import Accent from "./accent/accent";
 import SpecialChars from "./special-chars/special-chars";
+import BoldAccentUI from "./accent/boldaccentui";
+import MySuperscriptUI from "./superscript/superscriptui";
+
+import XmlClassicEditor from "./xml-classic-editor";
 
 import "@ckeditor/ckeditor5-build-classic/build/translations/ru.js";
 
-ClassicEditor.create(document.querySelector("#editor"), {
+XmlClassicEditor.create(document.querySelector("#editor"), {
   plugins: [
     Essentials,
     Superscript,
+    MySuperscriptUI,
     Paragraph,
     InterviewItem,
     Highlight,
-    Accent,
-    SpecialChars
+    SpecialChars,
+    Bold,
+    BoldAccentUI
   ],
   toolbar: [
-    "superscript",
-    "accent",
+    "my_superscript",
+    "accent_bold",
     "interviewItem",
     "highlight",
     "specialChar1",
@@ -67,3 +72,14 @@ ClassicEditor.create(document.querySelector("#editor"), {
   .catch(err => {
     console.error(err.stack);
   });
+
+function getEditorData() {
+  console.log(window.editor.getData());
+}
+
+function setEditorData() {
+  window.editor.setData(document.getElementById("textArea").value);
+}
+
+document.getElementById("getDataBtn").onclick = getEditorData;
+document.getElementById("setDataBtn").onclick = setEditorData;

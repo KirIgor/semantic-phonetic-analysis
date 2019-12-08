@@ -169,3 +169,7 @@
 [tooltip][flow^="right"]:hover::after {
   animation: tooltips-horz 300ms ease-out forwards;
 }
+
+.ck-editor__editable_inline {
+  min-height: 200px;
+}
