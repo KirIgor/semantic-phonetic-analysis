@@ -3,9 +3,10 @@
 const path = require("path");
 const { styles } = require("@ckeditor/ckeditor5-dev-utils");
 const CKEditorWebpackPlugin = require("@ckeditor/ckeditor5-dev-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./app.js",
+  entry: "./src/index.js",
 
   plugins: [
     new CKEditorWebpackPlugin({
@@ -28,8 +29,10 @@ module.exports = {
       // Whether to log all warnings to the console.
       // Defaults to `false`.
       // verbose: true
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html"
     })
-
     // Other webpack plugins...
   ],
 
@@ -40,6 +43,18 @@ module.exports = {
 
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: ["style-loader", "css-loader"]
+      },
       {
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
         use: ["raw-loader"]

@@ -14,7 +14,7 @@
   content: "— ";
 }
 
-.interview-item-answer p {
+.interview-item-answer p:first-of-type {
   display: inline-block;
 }
 

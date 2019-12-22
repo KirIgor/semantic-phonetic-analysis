@@ -19,12 +19,6 @@ export default class XmlDataProcessor {
     }
 
     const jsonResult = {
-      declaration: {
-        attributes: {
-          version: "1.0",
-          encoding: "utf-8"
-        }
-      },
       elements: [{ type: "element", name: "record", elements: json }]
     };
 
