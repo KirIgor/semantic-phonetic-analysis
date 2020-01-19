@@ -11,6 +11,10 @@ import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
 
 import HighlightCommand from "./highlightcommand";
 
+const rgbaToString = rgba => {
+  return "rgba(" + rgba.r + "," + rgba.g + "," + rgba.b + "," + rgba.a + ")";
+};
+
 /**
  * The highlight editing feature. It introduces the {@link module:highlight/highlightcommand~HighlightCommand command} and the `highlight`
  * attribute in the {@link module:engine/model/model~Model model} which renders in the {@link module:engine/view/view view}
@@ -117,7 +121,7 @@ function _buildDefinition(options) {
     definition.view[option.model] = {
       name: "mark",
       styles: {
-        "background-color": option.color
+        "background-color": rgbaToString(option.color)
       },
       attributes: {
         tooltip: option.model

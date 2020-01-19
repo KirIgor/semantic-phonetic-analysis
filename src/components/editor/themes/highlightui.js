@@ -10,11 +10,17 @@ import {
   addListToDropdown
 } from "@ckeditor/ckeditor5-ui/src/dropdown/utils";
 
+const rgbaToString = rgba => {
+  return "rgba(" + rgba.r + "," + rgba.g + "," + rgba.b + "," + rgba.a + ")";
+};
+
 export default class HighlightUI extends Plugin {
   static get pluginName() {
     return "HighlightUI";
   }
+
   init() {
+    this._openModal = this.editor.config._config["highlight"]["openModal"];
     const options = this.editor.config.get("highlight.options");
 
     this._addDropdown(options);
@@ -54,8 +60,12 @@ export default class HighlightUI extends Plugin {
 
       // Execute the command when the dropdown item is clicked (executed).
       this.listenTo(dropdownView, "execute", evt => {
-        editor.execute("highlight", { value: evt.source.commandParam });
-        editor.editing.view.focus();
+        if (evt.source.commandParam === "OPEN_MODAL") {
+          this._openModal();
+        } else {
+          editor.execute("highlight", { value: evt.source.commandParam });
+          editor.editing.view.focus();
+        }
       });
 
       return dropdownView;
@@ -73,7 +83,7 @@ export default class HighlightUI extends Plugin {
           label: option.model,
           icon:
             '<?xml version="1.0"?><svg viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg"><circle fill="' +
-            option.color +
+            rgbaToString(option.color) +
             '" cx="50" cy="50" r="50"/></svg>',
           withText: true
         })
@@ -82,6 +92,17 @@ export default class HighlightUI extends Plugin {
       // Add the item definition to the collection.
       itemDefinitions.add(definition);
     }
+
+    itemDefinitions.add({
+      type: "button",
+      model: new Model({
+        commandParam: "OPEN_MODAL",
+        icon:
+          '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>',
+        label: "редактировать",
+        withText: true
+      })
+    });
 
     itemDefinitions.add({
       type: "button",

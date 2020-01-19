@@ -7,29 +7,49 @@ import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
 
 import XmlClassicEditor from "./xml-classic-editor";
 
+import EditThemesModal from "./themes/edit-themes-modal";
+
 import { setData } from "../../actions/editor";
 
 import "@ckeditor/ckeditor5-build-classic/build/translations/ru.js";
 
 const Editor = React.memo(({ data, config, setData }) => {
-  const onInit = React.useCallback(editor => {
-    CKEditorInspector.attach(editor);
-  }, []);
+  const [opened, setOpened] = React.useState(false);
+
+  const editor = React.useRef(null);
+  const openModal = React.useCallback(() => setOpened(true), []);
 
   const onChange = React.useCallback((e, editor) => {
     setData(editor.getData());
   }, []);
 
+  const onClose = React.useCallback(() => {
+    editor.current._destroyEditor();
+    editor.current._initializeEditor();
+    setOpened(false);
+  }, [editor]);
+
   return (
-    <CKEditor
-      editor={XmlClassicEditor}
-      data={data}
-      config={config}
-      onInit={onInit}
-      onChange={onChange}
-    />
+    <>
+      <EditThemesModal
+        open={opened}
+        onClose={onClose}
+        themes={config["highlight"]["options"]}
+      />
+      <CKEditor
+        ref={editor}
+        editor={XmlClassicEditor}
+        data={data}
+        config={Object.assign(config, {
+          highlight: Object.assign(config.highlight, { openModal })
+        })}
+        onChange={onChange}
+      />
+    </>
   );
 });
+
+// dangerouslySetInnerHTML={{ __html: data }}
 
 const mapStateToProps = ({ editor: { data, config } }) => ({ data, config });
 const mapDispatchToProps = dispatch =>

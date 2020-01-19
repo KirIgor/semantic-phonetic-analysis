@@ -4,6 +4,10 @@ import ViewText from "@ckeditor/ckeditor5-engine/src/view/text";
 
 import convert from "xml-js";
 
+const rgbaToString = rgba => {
+  return "rgba(" + rgba.r + "," + rgba.g + "," + rgba.b + "," + rgba.a + ")";
+};
+
 export default class XmlDataProcessor {
   constructor(config) {
     this.config = config;
@@ -29,6 +33,8 @@ export default class XmlDataProcessor {
   }
 
   toView(xmlString) {
+    if (!xmlString) return new DocumentFragment();
+
     const jsonData = JSON.parse(
       convert.xml2json(xmlString, {
         compact: false,
@@ -37,6 +43,8 @@ export default class XmlDataProcessor {
       })
     );
     const viewFragment = new DocumentFragment();
+
+    if (!jsonData.elements[0].elements) return viewFragment;
 
     for (const childJson of jsonData.elements[0].elements) {
       const child = xmlToView(childJson, this.config);
@@ -127,9 +135,11 @@ function xmlToView(xmlObject, config) {
         tooltip: xmlObject.attributes.class,
         style:
           "background-color:" +
-          config
-            .get("highlight.options")
-            .find(opt => opt.model == xmlObject.attributes.class).color
+          rgbaToString(
+            config
+              .get("highlight.options")
+              .find(opt => opt.model == xmlObject.attributes.class).color
+          )
       };
     }
 
