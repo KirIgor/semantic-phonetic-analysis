@@ -2,19 +2,29 @@ import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
+import Themes from "./themes/themes";
+
 import CKEditor from "@ckeditor/ckeditor5-react";
 import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
 
 import XmlClassicEditor from "./xml-classic-editor";
 
-import EditThemesModal from "./themes/edit-themes-modal";
-
 import { setData } from "../../actions/editor";
+
+import { makeStyles } from "@material-ui/core/styles";
 
 import "@ckeditor/ckeditor5-build-classic/build/translations/ru.js";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+}));
+
 const Editor = React.memo(({ data, config, setData }) => {
   const [opened, setOpened] = React.useState(false);
+
+  const classes = useStyles();
 
   const editor = React.useRef(null);
   const openModal = React.useCallback(() => setOpened(true), []);
@@ -29,33 +39,35 @@ const Editor = React.memo(({ data, config, setData }) => {
     setOpened(false);
   }, [editor]);
 
+  const onInit = React.useCallback(
+    (editor) => {
+      window.editor = editor;
+      CKEditorInspector.attach(editor);
+    },
+    [setData]
+  );
+
   return (
-    <>
-      <EditThemesModal
-        open={opened}
-        onClose={onClose}
-        themes={config["highlight"]["options"]}
-      />
+    <div className={classes.root}>
       <CKEditor
         ref={editor}
         editor={XmlClassicEditor}
         data={data}
         config={Object.assign(config, {
-          highlight: Object.assign(config.highlight, { openModal })
+          highlight: Object.assign(config.highlight, { openModal }),
         })}
         onChange={onChange}
+        onInit={onInit}
       />
-    </>
+      <Themes />
+    </div>
   );
 });
 
 // dangerouslySetInnerHTML={{ __html: data }}
 
 const mapStateToProps = ({ editor: { data, config } }) => ({ data, config });
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators({ setData }, dispatch);
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Editor);
+export default connect(mapStateToProps, mapDispatchToProps)(Editor);

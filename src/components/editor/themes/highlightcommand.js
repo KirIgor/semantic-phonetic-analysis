@@ -7,7 +7,7 @@
  * @module highlight/highlightcommand
  */
 
-import Command from '@ckeditor/ckeditor5-core/src/command';
+import Command from "@ckeditor/ckeditor5-core/src/command";
 
 /**
  * The highlight command. It is used by the {@link module:highlight/highlightediting~HighlightEditing highlight feature}
@@ -22,81 +22,92 @@ import Command from '@ckeditor/ckeditor5-core/src/command';
  * @extends module:core/command~Command
  */
 export default class HighlightCommand extends Command {
-	/**
-	 * @inheritDoc
-	 */
-	refresh() {
-		const model = this.editor.model;
-		const doc = model.document;
+  /**
+   * @inheritDoc
+   */
+  //   refresh() {
+  //     const model = this.editor.model;
+  //     const doc = model.document;
 
-		/**
-		 * A value indicating whether the command is active. If the selection has some highlight attribute,
-		 * it corresponds to the value of that attribute.
-		 *
-		 * @observable
-		 * @readonly
-		 * @member {undefined|String} module:highlight/highlightcommand~HighlightCommand#value
-		 */
-		this.value = doc.selection.getAttribute( 'highlight' );
-		this.isEnabled = model.schema.checkAttributeInSelection( doc.selection, 'highlight' );
-	}
+  //     /**
+  //      * A value indicating whether the command is active. If the selection has some highlight attribute,
+  //      * it corresponds to the value of that attribute.
+  //      *
+  //      * @observable
+  //      * @readonly
+  //      * @member {undefined|String} module:highlight/highlightcommand~HighlightCommand#value
+  //      */
+  //     this.value = doc.selection.getAttribute("highlight");
+  //     this.isEnabled = model.schema.checkAttributeInSelection(
+  //       doc.selection,
+  //       "highlight"
+  //     );
+  //   }
 
-	/**
-	 * Executes the command.
-	 *
-	 * @protected
-	 * @param {Object} [options] Options for the executed command.
-	 * @param {String} [options.value] The value to apply.
-	 *
-	 * @fires execute
-	 */
-	execute( options = {} ) {
-		const model = this.editor.model;
-		const document = model.document;
-		const selection = document.selection;
+  /**
+   * Executes the command.
+   *
+   * @protected
+   * @param {Object} [options] Options for the executed command.
+   * @param {String} [options.value] The value to apply.
+   *
+   * @fires execute
+   */
+  execute(options = {}) {
+    const model = this.editor.model;
+    const document = model.document;
+    const selection = document.selection;
 
-		const highlighter = options.value;
+    const highlighter = options.value;
 
-		model.change( writer => {
-			const ranges = model.schema.getValidRanges( selection.getRanges(), 'highlight' );
+    model.change((writer) => {
+      if (!highlighter) {
+        for (const range of selection.getRanges()) {
+          options.list.forEach((attr) => {
+            writer.removeAttribute(attr, range);
+            writer.removeSelectionAttribute(attr);
+          });
+        }
+      } else {
+        const ranges = model.schema.getValidRanges(
+          selection.getRanges(),
+          highlighter
+        );
 
-			if ( selection.isCollapsed ) {
-				const position = selection.getFirstPosition();
+        if (selection.isCollapsed) {
+          const position = selection.getFirstPosition();
 
-				// When selection is inside text with `highlight` attribute.
-				if ( selection.hasAttribute( 'highlight' ) ) {
-					// Find the full highlighted range.
-					const isSameHighlight = value => {
-						return value.item.hasAttribute( 'highlight' ) && value.item.getAttribute( 'highlight' ) === this.value;
-					};
+          // When selection is inside text with `highlight` attribute.
+          if (selection.hasAttribute(highlighter)) {
+            // Find the full highlighted range.
+            const isSameHighlight = (value) => {
+              return value.item.hasAttribute(highlighter);
+            };
 
-					const highlightStart = position.getLastMatchingPosition( isSameHighlight, { direction: 'backward' } );
-					const highlightEnd = position.getLastMatchingPosition( isSameHighlight );
+            const highlightStart = position.getLastMatchingPosition(
+              isSameHighlight,
+              { direction: "backward" }
+            );
+            const highlightEnd = position.getLastMatchingPosition(
+              isSameHighlight
+            );
 
-					const highlightRange = writer.createRange( highlightStart, highlightEnd );
+            const highlightRange = writer.createRange(
+              highlightStart,
+              highlightEnd
+            );
 
-					// Then depending on current value...
-					if ( !highlighter || this.value === highlighter ) {
-						// ...remove attribute when passing highlighter different then current or executing "eraser".
-						writer.removeAttribute( 'highlight', highlightRange );
-						writer.removeSelectionAttribute( 'highlight' );
-					} else {
-						// ...update `highlight` value.
-						writer.setAttribute( 'highlight', highlighter, highlightRange );
-						writer.setSelectionAttribute( 'highlight', highlighter );
-					}
-				} else if ( highlighter ) {
-					writer.setSelectionAttribute( 'highlight', highlighter );
-				}
-			} else {
-				for ( const range of ranges ) {
-					if ( highlighter ) {
-						writer.setAttribute( 'highlight', highlighter, range );
-					} else {
-						writer.removeAttribute( 'highlight', range );
-					}
-				}
-			}
-		} );
-	}
+            writer.setAttribute(highlighter, true, highlightRange);
+            writer.setSelectionAttribute(highlighter, true);
+          } else {
+            writer.setSelectionAttribute(highlighter, true);
+          }
+        } else {
+          for (const range of ranges) {
+            writer.setAttribute(highlighter, true, range);
+          }
+        }
+      }
+    });
+  }
 }

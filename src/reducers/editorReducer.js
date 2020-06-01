@@ -1,3 +1,6 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
 import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
 import Superscript from "@ckeditor/ckeditor5-basic-styles/src/superscript";
 import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
@@ -9,6 +12,8 @@ import SpecialChars from "../components/editor/special-chars/special-chars";
 import BoldAccentUI from "../components/editor/accent/boldaccentui";
 import MySuperscriptUI from "../components/editor/superscript/superscriptui";
 
+import HighlightComponent from "../components/editor/themes/highlight-component";
+
 import { fromJS } from "immutable";
 
 import {
@@ -16,7 +21,6 @@ import {
   ADD_THEME,
   DELETE_THEME,
   CHANGE_THEME_MODEL,
-  CHANGE_THEME_COLOR
 } from "../actions/editor";
 
 const initState = {
@@ -31,13 +35,12 @@ const initState = {
       Highlight,
       SpecialChars,
       Bold,
-      BoldAccentUI
+      BoldAccentUI,
     ],
     toolbar: [
       "my_superscript",
       "accent_bold",
       "interviewItem",
-      "highlight",
       "specialChar1",
       "specialChar2",
       "specialChar3",
@@ -46,29 +49,32 @@ const initState = {
       "specialChar6",
       "specialChar7",
       "undo",
-      "redo"
+      "redo",
     ],
     highlight: {
       options: [
         {
           model: "быт",
-          color: { r: 171, g: 205, b: 239, a: 0.94 },
-          type: "marker"
         },
         {
           model: "родня",
-          color: { r: 254, g: 220, b: 186, a: 0.94 },
-          type: "marker"
         },
         {
           model: "дом",
-          color: { r: 205, g: 171, b: 239, a: 0.94 },
-          type: "marker"
-        }
-      ]
+        },
+        {
+          model: "хозяйство",
+        },
+        {
+          model: "кровь",
+        },
+      ],
+      renderHighlight: (id, domElement) => {
+        ReactDOM.render(<HighlightComponent />, domElement);
+      },
     },
-    language: "ru"
-  }
+    language: "ru",
+  },
 };
 
 const editorReducer = (state = initState, action) => {
@@ -79,11 +85,11 @@ const editorReducer = (state = initState, action) => {
     case ADD_THEME: {
       const { model, color } = action.payload;
 
-      if (state.config["highlight"]["options"].find(o => o.model == model))
+      if (state.config["highlight"]["options"].find((o) => o.model == model))
         throw Error("Такая тема уже существует.");
 
       return fromJS(state)
-        .updateIn(["config", "highlight", "options"], prev =>
+        .updateIn(["config", "highlight", "options"], (prev) =>
           prev.concat({ model, color })
         )
         .toJS();
@@ -92,34 +98,22 @@ const editorReducer = (state = initState, action) => {
       const { model } = action.payload;
 
       return fromJS(state)
-        .updateIn(["config", "highlight", "options"], prev =>
-          prev.delete(prev.findIndex(e => e.get("model") == model))
+        .updateIn(["config", "highlight", "options"], (prev) =>
+          prev.delete(prev.findIndex((e) => e.get("model") == model))
         )
         .toJS();
     }
     case CHANGE_THEME_MODEL: {
       const { oldModel, newModel } = action.payload;
 
-      if (state.config["highlight"]["options"].find(o => o.model == newModel))
+      if (state.config["highlight"]["options"].find((o) => o.model == newModel))
         throw Error("Такая тема уже существует.");
 
       return fromJS(state)
-        .updateIn(["config", "highlight", "options"], prev =>
+        .updateIn(["config", "highlight", "options"], (prev) =>
           prev.setIn(
-            [prev.findIndex(e => e.get("model") == oldModel), "model"],
+            [prev.findIndex((e) => e.get("model") == oldModel), "model"],
             newModel
-          )
-        )
-        .toJS();
-    }
-    case CHANGE_THEME_COLOR: {
-      const { model, newColor } = action.payload;
-
-      return fromJS(state)
-        .updateIn(["config", "highlight", "options"], prev =>
-          prev.setIn(
-            [prev.findIndex(e => e.get("model") == model), "color"],
-            newColor
           )
         )
         .toJS();

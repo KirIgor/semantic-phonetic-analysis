@@ -4,10 +4,6 @@ import ViewText from "@ckeditor/ckeditor5-engine/src/view/text";
 
 import convert from "xml-js";
 
-const rgbaToString = rgba => {
-  return "rgba(" + rgba.r + "," + rgba.g + "," + rgba.b + "," + rgba.a + ")";
-};
-
 export default class XmlDataProcessor {
   constructor(config) {
     this.config = config;
@@ -23,7 +19,7 @@ export default class XmlDataProcessor {
     }
 
     const jsonResult = {
-      elements: [{ type: "element", name: "record", elements: json }]
+      elements: [{ type: "element", name: "record", elements: json }],
     };
 
     const options = { compact: false, ignoreComment: true, spaces: 0 };
@@ -33,16 +29,16 @@ export default class XmlDataProcessor {
   }
 
   toView(xmlString) {
-    if (!xmlString) return new DocumentFragment();
+    if (!xmlString) return new DocumentFragment("record");
 
     const jsonData = JSON.parse(
       convert.xml2json(xmlString, {
         compact: false,
         ignoreComment: true,
-        spaces: 0
+        spaces: 0,
       })
     );
-    const viewFragment = new DocumentFragment();
+    const viewFragment = new DocumentFragment("record");
 
     if (!jsonData.elements[0].elements) return viewFragment;
 
@@ -52,6 +48,8 @@ export default class XmlDataProcessor {
 
       viewFragment._appendChild(child);
     }
+
+    console.log(viewFragment);
 
     return viewFragment;
   }
@@ -80,16 +78,12 @@ function viewToXml(viewElement) {
       viewElement.name == "div" &&
       viewElement.hasClass("interview-item-question")
     ) {
-      json.name = "question";
+      json.name = "interviewItemQuestion";
     } else if (
       viewElement.name == "div" &&
       viewElement.hasClass("interview-item-answer")
     ) {
-      json.name = "answer";
-    } else if (viewElement.name == "mark") {
-      json.name = "theme";
-      json.attributes = {};
-      json.attributes.class = viewElement.getAttribute("tooltip");
+      json.name = "interviewItemAnswer";
     }
 
     json.elements = [];
@@ -104,7 +98,7 @@ function viewToXml(viewElement) {
 
 function xmlToView(xmlObject, config) {
   if (xmlObject.type == "text") {
-    return new ViewText(xmlObject.text);
+    return new ViewText(undefined, xmlObject.text);
   } else if (xmlObject.type == "element") {
     const element = {};
 
@@ -117,29 +111,21 @@ function xmlToView(xmlObject, config) {
     } else if (xmlObject.name.toUpperCase() == "interviewItem".toUpperCase()) {
       element.name = "section";
       element.attributes = {
-        class: "interview-item"
+        class: "interview-item",
       };
-    } else if (xmlObject.name == "question") {
+    } else if (
+      xmlObject.name.toUpperCase() == "interviewItemQuestion".toUpperCase()
+    ) {
       element.name = "div";
       element.attributes = {
-        class: "interview-item-question"
+        class: "interview-item-question",
       };
-    } else if (xmlObject.name == "answer") {
+    } else if (
+      xmlObject.name.toUpperCase() == "interviewItemAnswer".toUpperCase()
+    ) {
       element.name = "div";
       element.attributes = {
-        class: "interview-item-answer"
-      };
-    } else if (xmlObject.name == "theme") {
-      element.name = "mark";
-      element.attributes = {
-        tooltip: xmlObject.attributes.class,
-        style:
-          "background-color:" +
-          rgbaToString(
-            config
-              .get("highlight.options")
-              .find(opt => opt.model == xmlObject.attributes.class).color
-          )
+        class: "interview-item-answer",
       };
     }
 

@@ -2,6 +2,8 @@ import React from "react";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { Provider } from "react-redux";
 
+import Modal from "react-modal";
+
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
@@ -21,9 +23,11 @@ const alertOptions = {
   offset: "30px",
   transition: transitions.SCALE,
   containerStyle: {
-    zIndex: 1001
-  }
+    zIndex: 1001,
+  },
 };
+
+Modal.setAppElement("#root");
 
 const App = React.memo(() => {
   return (

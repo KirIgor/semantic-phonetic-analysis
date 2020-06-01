@@ -6,14 +6,13 @@ import { useAlert } from "react-alert";
 
 import FlipMove from "react-flip-move";
 
-import Modal from "react-responsive-modal";
-import { SketchPicker } from "react-color";
+// import Modal from "react-responsive-modal";
+import Modal from "react-modal";
 
 import {
-  changeThemeColor,
   changeThemeModel,
   addTheme,
-  deleteTheme
+  deleteTheme,
 } from "../../../actions/editor";
 
 import "./edit-themes-modal.css";
@@ -40,21 +39,8 @@ const addIcon = (
   </svg>
 );
 
-const rgbaToString = rgba => {
-  return "rgba(" + rgba.r + "," + rgba.g + "," + rgba.b + "," + rgba.a + ")";
-};
-
 const EditThemesModal = React.memo(
-  ({
-    open,
-    onClose,
-    themes,
-    changeThemeColor,
-    changeThemeModel,
-    deleteTheme,
-    addTheme
-  }) => {
-    const [colorPickerModel, setColorPickerModel] = React.useState(null);
+  ({ open, onClose, themes, changeThemeModel, deleteTheme, addTheme }) => {
     const [editModel, setEditModel] = React.useState(null);
     const [editModelData, setEditModelData] = React.useState(null);
 
@@ -65,22 +51,7 @@ const EditThemesModal = React.memo(
       if (input) input.focus();
     }, [editModel]);
 
-    const onClickColorCircle = React.useCallback(
-      model => {
-        setColorPickerModel(model);
-      },
-      [editModel]
-    );
-
-    const closeColorPicker = React.useCallback(() => {
-      setColorPickerModel(null);
-    }, []);
-
-    const onChangeColor = React.useCallback((model, newColor) => {
-      changeThemeColor(model, newColor);
-    }, []);
-
-    const onCrossClick = React.useCallback(model => {
+    const onCrossClick = React.useCallback((model) => {
       deleteTheme(model);
     }, []);
 
@@ -93,7 +64,7 @@ const EditThemesModal = React.memo(
       }
     }, []);
 
-    const onDoubleClickModel = React.useCallback(model => {
+    const onDoubleClickModel = React.useCallback((model) => {
       setEditModel(model);
       setEditModelData(model);
     }, []);
@@ -111,12 +82,12 @@ const EditThemesModal = React.memo(
       setEditModelData(null);
     }, [editModel, editModelData]);
 
-    const onChangeInput = React.useCallback(e => {
+    const onChangeInput = React.useCallback((e) => {
       setEditModelData(e.target.value);
     }, []);
 
     const onInputKeyDown = React.useCallback(
-      e => {
+      (e) => {
         if (e.key == "Enter") {
           onInputBlur();
         }
@@ -125,34 +96,22 @@ const EditThemesModal = React.memo(
     );
 
     return (
-      <Modal open={open} onClose={onClose}>
+      <Modal
+        isOpen={open}
+        onRequestClose={onClose}
+        style={{
+          overlay: {
+            zIndex: 1500,
+            backgroundColor: "white",
+          },
+        }}
+      >
         <div>
           <div className="edit-themes-modal">
             <FlipMove>
-              {themes.map(theme => (
+              {themes.map((theme) => (
                 <div key={theme.model} className="edit-themes-modal-theme">
                   <div className="edit-themes-modal-theme-info">
-                    <div>
-                      <div
-                        className="edit-themes-modal-color-circle"
-                        style={{ backgroundColor: rgbaToString(theme.color) }}
-                        onClick={() => onClickColorCircle(theme.model)}
-                      />
-                      {colorPickerModel === theme.model && (
-                        <div className="edit-themes-modal-popover">
-                          <div
-                            className="edit-themes-modal-cover"
-                            onClick={closeColorPicker}
-                          ></div>
-                          <SketchPicker
-                            color={theme.color}
-                            onChange={color =>
-                              onChangeColor(theme.model, color.rgb)
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
                     <div
                       className="edit-themes-modal-model"
                       onDoubleClick={() => onDoubleClickModel(theme.model)}
@@ -190,13 +149,7 @@ const EditThemesModal = React.memo(
   }
 );
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    { addTheme, deleteTheme, changeThemeColor, changeThemeModel },
-    dispatch
-  );
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators({ addTheme, deleteTheme, changeThemeModel }, dispatch);
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(EditThemesModal);
+export default connect(null, mapDispatchToProps)(EditThemesModal);
