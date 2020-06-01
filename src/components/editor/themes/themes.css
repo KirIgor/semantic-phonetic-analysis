@@ -3,21 +3,22 @@
   flex-direction: column;
   flex-grow: 1;
   padding: 10px;
-  overflow-y: scroll;
   height: 400px;
 }
 
 .themes-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  list-style-type: none;
+  overflow-y: scroll;
+  height: 400px;
 }
 
 .themes-list-item {
   width: 100%;
   height: 30px;
+}
+
+.themes-add {
+  display: flex;
+  align-items: center;
 }
 
 .ck-editor {

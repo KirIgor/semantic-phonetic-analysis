@@ -19,8 +19,9 @@ import { fromJS } from "immutable";
 import {
   SET_DATA,
   ADD_THEME,
-  DELETE_THEME,
+  DELETE_THEMES,
   CHANGE_THEME_MODEL,
+  SET_THEMES_COLORS,
 } from "../actions/editor";
 
 const initState = {
@@ -83,23 +84,64 @@ const editorReducer = (state = initState, action) => {
       return { config: state.config, data: action.payload };
     }
     case ADD_THEME: {
-      const { model, color } = action.payload;
+      const { model } = action.payload;
 
       if (state.config["highlight"]["options"].find((o) => o.model == model))
         throw Error("Такая тема уже существует.");
 
-      return fromJS(state)
-        .updateIn(["config", "highlight", "options"], (prev) =>
-          prev.concat({ model, color })
-        )
-        .toJS();
-    }
-    case DELETE_THEME: {
-      const { model } = action.payload;
+      window.editor.model.schema.extend("$text", {
+        allowAttributes: [model],
+      });
+
+      window.editor.conversion.attributeToElement({
+        model,
+        view: {
+          name: "span",
+          attributes: {
+            tooltip: model,
+          },
+          classes: ["highlight"],
+        },
+      });
 
       return fromJS(state)
         .updateIn(["config", "highlight", "options"], (prev) =>
-          prev.delete(prev.findIndex((e) => e.get("model") == model))
+          prev.concat({ model })
+        )
+        .toJS();
+    }
+    case DELETE_THEMES: {
+      const { themes } = action.payload;
+
+      const models = themes.map((theme) => theme.model);
+
+      return fromJS(state)
+        .updateIn(["config", "highlight", "options"], (prev) =>
+          prev.filter((theme) => !models.includes(theme.get("model")))
+        )
+        .toJS();
+    }
+    case SET_THEMES_COLORS: {
+      const { map } = action.payload;
+
+      for (const model of Object.keys(map)) {
+        if (!state.config["highlight"]["options"].find((o) => o.model == model))
+          throw Error(`Темы ${model} не существует`);
+      }
+
+      return fromJS(state)
+        .updateIn(["config", "highlight", "options"], (prev) =>
+          prev.withMutations((prev) => {
+            for (const e of Object.entries(map)) {
+              prev.setIn(
+                [
+                  prev.findIndex((theme) => theme.get("model") == e[0]),
+                  "color",
+                ],
+                e[1]
+              );
+            }
+          })
         )
         .toJS();
     }

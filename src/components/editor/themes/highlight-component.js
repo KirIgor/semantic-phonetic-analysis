@@ -27,8 +27,8 @@ const Highlight = React.memo(({ eventData }) => {
   const [open, setOpen] = React.useState(false);
   const [themes, setThemes] = React.useState([]);
 
-  const target = eventData.target; // This is the view the user clicked on
-  const span = editor.editing.view.domConverter.mapViewToDom(target);
+  const target = eventData.target;
+  const span = target && editor.editing.view.domConverter.mapViewToDom(target);
 
   const onClose = React.useCallback(() => {
     setOpen(false);
@@ -49,12 +49,14 @@ const Highlight = React.memo(({ eventData }) => {
       window.editor.model.change((writer) => {
         writer.removeAttribute(theme, modelRange);
       });
+
+      setOpen(false);
     },
-    [themes, eventData, target]
+    [themes, eventData]
   );
 
   React.useEffect(() => {
-    if (span.classList.contains("highlight")) {
+    if (span && span.classList.contains("highlight")) {
       setOpen(true);
     }
   }, [eventData]);
@@ -67,7 +69,7 @@ const Highlight = React.memo(({ eventData }) => {
         writer.setSelection(writer.createSelection(viewRange));
       });
     }
-  }, [eventData, target, open]);
+  }, [eventData, open]);
 
   React.useEffect(() => {
     if (open) {
@@ -85,7 +87,7 @@ const Highlight = React.memo(({ eventData }) => {
 
       setThemes(themes);
     }
-  }, [eventData, span, open]);
+  }, [eventData, open]);
 
   return (
     <Popover

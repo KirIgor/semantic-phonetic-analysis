@@ -22,6 +22,10 @@
   height: 400px;
 }
 
+.ck.ck-editor {
+  width: 70%;
+}
+
 .highlight:before {
   content: "[";
   color: red;
@@ -41,4 +45,7 @@
 #highlight-popup {
   position: fixed;
   min-height: 50px;
+}
+
+[tooltip="быт"] {
 }
