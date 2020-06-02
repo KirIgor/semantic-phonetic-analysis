@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Themes from "./themes/themes";
 
 import CKEditor from "@ckeditor/ckeditor5-react";
-import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
+// import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
 
 import XmlClassicEditor from "./xml-classic-editor";
 
@@ -22,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Editor = React.memo(({ data, config, setData }) => {
-  const [opened, setOpened] = React.useState(false);
-
   const classes = useStyles();
 
   const editor = React.useRef(null);
@@ -33,16 +31,10 @@ const Editor = React.memo(({ data, config, setData }) => {
     setData(editor.getData());
   }, []);
 
-  const onClose = React.useCallback(() => {
-    editor.current._destroyEditor();
-    editor.current._initializeEditor();
-    setOpened(false);
-  }, [editor]);
-
   const onInit = React.useCallback(
     (editor) => {
       window.editor = editor;
-      CKEditorInspector.attach(editor);
+      // CKEditorInspector.attach(editor);
     },
     [setData]
   );
@@ -63,8 +55,6 @@ const Editor = React.memo(({ data, config, setData }) => {
     </div>
   );
 });
-
-// dangerouslySetInnerHTML={{ __html: data }}
 
 const mapStateToProps = ({ editor: { data, config } }) => ({ data, config });
 const mapDispatchToProps = (dispatch) =>

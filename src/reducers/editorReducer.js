@@ -19,9 +19,11 @@ import { fromJS } from "immutable";
 import {
   SET_DATA,
   ADD_THEME,
+  ADD_THEMES,
   DELETE_THEMES,
   CHANGE_THEME_MODEL,
   SET_THEMES_COLORS,
+  CLEAR_THEMES,
 } from "../actions/editor";
 
 const initState = {
@@ -82,6 +84,43 @@ const editorReducer = (state = initState, action) => {
   switch (action.type) {
     case SET_DATA: {
       return { config: state.config, data: action.payload };
+    }
+    case ADD_THEMES: {
+      let { models } = action.payload;
+
+      models = models.filter(
+        (model) =>
+          !state.config["highlight"]["options"].find((o) => o.model == model)
+      );
+
+      try {
+        window.editor.model.schema.extend("$text", {
+          allowAttributes: models,
+        });
+
+        models.forEach((model) => {
+          window.editor.conversion.attributeToElement({
+            model,
+            view: {
+              name: "span",
+              attributes: {
+                tooltip: model,
+              },
+              classes: ["highlight"],
+            },
+          });
+        });
+      } catch (ignored) {}
+
+      return fromJS(state)
+        .updateIn(["config", "highlight", "options"], (prev) =>
+          prev.concat(
+            models.map((model) => ({
+              model,
+            }))
+          )
+        )
+        .toJS();
     }
     case ADD_THEME: {
       const { model } = action.payload;
@@ -159,6 +198,9 @@ const editorReducer = (state = initState, action) => {
           )
         )
         .toJS();
+    }
+    case CLEAR_THEMES: {
+      return fromJS(state).setIn(["config", "highlight", "options"], []).toJS();
     }
     default:
       return initState;

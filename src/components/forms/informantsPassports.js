@@ -3,7 +3,7 @@ import MenuItem from "material-ui/MenuItem";
 import Divider from "material-ui/Divider";
 import Button from "material-ui/RaisedButton";
 import { reduxForm, Field, FieldArray } from "redux-form";
-import { TextField, SelectField } from "redux-form-material-ui";
+import { TextField, SelectField, DatePicker } from "redux-form-material-ui";
 
 import "./informantsPassports.css";
 
@@ -41,16 +41,59 @@ const renderInformants = ({ fields }) => (
             <MenuItem value="female" primaryText="Женский" />
           </Field>
           <Field
-            name={`${member}.birthLocation`}
+            name={`${member}.birthLocation.state`}
             component={TextField}
-            floatingLabelText="Место рождения"
-            hintText="Место рождения"
+            floatingLabelText="Место рождения - страна"
+            hintText="Место рождения - страна"
           />
           <Field
-            name={`${member}.parentBirthLocation`}
+            name={`${member}.birthLocation.region`}
             component={TextField}
-            floatingLabelText="Место рождения родителей"
-            hintText="Место рождения родителей"
+            floatingLabelText="Место рождения - область"
+            hintText="Место рождения - область"
+          />
+          <Field
+            name={`${member}.birthLocation.locality`}
+            component={TextField}
+            floatingLabelText="Место рождения - место"
+            hintText="Место рождения - место"
+          />
+          <Field
+            name={`${member}.birthLocation.district`}
+            component={TextField}
+            floatingLabelText="Место рождения - район"
+            hintText="Место рождения - район"
+          />
+          <Field
+            name={`${member}.parentBirthLocation.state`}
+            component={TextField}
+            floatingLabelText="Место рождения родителей - страна"
+            hintText="Место рождения родителей - страна"
+          />
+          <Field
+            name={`${member}.parentBirthLocation.region`}
+            component={TextField}
+            floatingLabelText="Место рождения родителей - область"
+            hintText="Место рождения родителей - область"
+          />
+          <Field
+            name={`${member}.parentBirthLocation.locality`}
+            component={TextField}
+            floatingLabelText="Место рождения родителей - место"
+            hintText="Место рождения родителей - место"
+          />
+          <Field
+            name={`${member}.parentBirthLocation.district`}
+            component={TextField}
+            floatingLabelText="Место рождения родителей - район"
+            hintText="Место рождения родителей - район"
+          />
+          <Field
+            name={`${member}.birthDay`}
+            component={DatePicker}
+            format={null}
+            floatingLabelText="Дата рождения"
+            hintText="Дата рождения"
           />
           <Field
             name={`${member}.selfIdentification`}

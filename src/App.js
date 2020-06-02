@@ -10,8 +10,9 @@ import store from "./store";
 import Editor from "./components/editor/editor";
 import TextPassportForm from "./components/forms/textPassport";
 import InformantsPassportsForm from "./components/forms/informantsPassports";
-import Save from "./components/saveAndLoad/save";
-import Load from "./components/saveAndLoad/load";
+import SaveAndLoad from "./components/saveAndLoad/save-load";
+
+import Paper from "@material-ui/core/Paper";
 
 import "./style.css";
 
@@ -30,13 +31,20 @@ const App = React.memo(() => {
     <AlertProvider template={AlertTemplate} {...alertOptions}>
       <Provider store={store}>
         <MuiThemeProvider>
-          <div>Пасспорт текста</div>
-          <TextPassportForm />
-          <div>Пасспорта информантов</div>
-          <InformantsPassportsForm />
-          <Editor />
-          <Save />
-          <Load />
+          <Paper elevation={2} className="main-paper">
+            <div>Пасспорт текста</div>
+            <TextPassportForm />
+          </Paper>
+          <Paper elevation={2} className="main-paper">
+            <div>Пасспорта информантов</div>
+            <InformantsPassportsForm />
+          </Paper>
+          <Paper elevation={2} className="main-paper">
+            <Editor />
+          </Paper>
+          <Paper elevation={2} className="main-paper">
+            <SaveAndLoad />
+          </Paper>
         </MuiThemeProvider>
       </Provider>
     </AlertProvider>

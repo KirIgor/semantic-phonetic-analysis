@@ -47,5 +47,10 @@
   min-height: 50px;
 }
 
+.main-paper {
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
 [tooltip="быт"] {
 }
