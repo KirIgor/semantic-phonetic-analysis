@@ -44,11 +44,9 @@ const Editor = React.memo(({ data, config, setData }) => {
       <CKEditor
         ref={editor}
         editor={XmlClassicEditor}
-        data={data}
         config={Object.assign(config, {
           highlight: Object.assign(config.highlight, { openModal }),
         })}
-        onChange={onChange}
         onInit={onInit}
       />
       <Themes />

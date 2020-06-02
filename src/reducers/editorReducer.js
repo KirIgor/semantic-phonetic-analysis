@@ -27,7 +27,7 @@ import {
 } from "../actions/editor";
 
 const initState = {
-  data: '<?xml version="1.0" encoding="utf-8"?><record><p></p></record>',
+  // data: '<?xml version="1.0" encoding="utf-8"?><record><p></p></record>',
   config: {
     plugins: [
       Essentials,
@@ -82,9 +82,9 @@ const initState = {
 
 const editorReducer = (state = initState, action) => {
   switch (action.type) {
-    case SET_DATA: {
-      return { config: state.config, data: action.payload };
-    }
+    // case SET_DATA: {
+    //   return { config: state.config, data: action.payload };
+    // }
     case ADD_THEMES: {
       let { models } = action.payload;
 

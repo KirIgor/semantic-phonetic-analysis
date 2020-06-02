@@ -7,12 +7,7 @@ import convert from "xml-js";
 
 import { List } from "immutable";
 
-import {
-  setData,
-  clearThemes,
-  addThemes,
-  addTheme,
-} from "../../actions/editor";
+import { clearThemes, addThemes } from "../../actions/editor";
 
 const findAllThemes = (text, attribute) => {
   return List(
@@ -57,7 +52,7 @@ const readJson = (
 
   clearThemes();
   addThemes(findAllThemes(json.record, "tooltip"));
-  setData(json.record);
+  window.editor.setData(json.record);
 };
 
 ///////////////XML//////////////////
@@ -90,7 +85,6 @@ const readXml = (
   change,
   arrayRemoveAll,
   arrayPush,
-  setData,
   clearThemes,
   addThemes
 ) => {
@@ -180,7 +174,7 @@ const readXml = (
 
   clearThemes();
   addThemes(findAllThemes(cdata, "tooltip"));
-  setData(cdata);
+  window.editor.setData(cdata);
 };
 
 const informantToForm = (informant) => {
@@ -212,15 +206,7 @@ const informantToForm = (informant) => {
 ///////////////////React/////////////////////
 
 const Load = React.memo(
-  ({
-    setData,
-    change,
-    arrayRemoveAll,
-    arrayPush,
-    clearThemes,
-    addThemes,
-    isJson,
-  }) => {
+  ({ change, arrayRemoveAll, arrayPush, clearThemes, addThemes, isJson }) => {
     const onChange = React.useCallback(
       (e) => {
         const reader = new FileReader();
@@ -231,7 +217,6 @@ const Load = React.memo(
               change,
               arrayRemoveAll,
               arrayPush,
-              setData,
               clearThemes,
               addThemes
             );
@@ -241,7 +226,6 @@ const Load = React.memo(
               change,
               arrayRemoveAll,
               arrayPush,
-              setData,
               clearThemes,
               addThemes
             );
@@ -249,7 +233,7 @@ const Load = React.memo(
         };
         reader.readAsText(e.target.files[0]);
       },
-      [setData, change, arrayRemoveAll, arrayPush, isJson]
+      [change, arrayRemoveAll, arrayPush, isJson]
     );
 
     return <input type="file" name="file" onChange={onChange} />;
@@ -258,7 +242,7 @@ const Load = React.memo(
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { setData, change, arrayRemoveAll, arrayPush, clearThemes, addThemes },
+    { change, arrayRemoveAll, arrayPush, clearThemes, addThemes },
     dispatch
   );
 

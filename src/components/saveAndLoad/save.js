@@ -24,7 +24,7 @@ const stateToJson = (state) => {
       informants: (state.form.informantsPassports.values || { informants: [] })
         .informants,
     },
-    record: state.editor.data,
+    record: window.editor.getData(),
   });
 };
 
@@ -37,7 +37,7 @@ const stateToXml = (state) => {
     comment: undefined,
   };
 
-  let cdata = state.editor.data;
+  let cdata = window.editor.getData();
 
   cdata = cdata.replace(/<strong>/gi, "<b>");
   cdata = cdata.replace(/<\/strong>/gi, "</b>");
