@@ -1,0 +1,47 @@
+{
+  "name": "semantic-phonetic-analysis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "dependencies": {
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.3",
+    "file-saver": "^2.0.2",
+    "html-webpack-plugin": "^4.3.0",
+    "immutable": "^4.0.0-rc.12",
+    "material-ui": "^0.20.2",
+    "postcss-loader": "^3.0.0",
+    "raw-loader": "^4.0.1",
+    "react": "^16.13.1",
+    "react-alert": "^7.0.1",
+    "react-alert-template-basic": "^1.0.0",
+    "react-dom": "^16.13.1",
+    "react-flip-move": "^3.0.4",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-form": "^8.3.6",
+    "redux-form-material-ui": "^4.3.4",
+    "style-loader": "^1.2.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0",
+    "xml-js": "^1.6.11",
+    "webpack": "^4.43.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "webpack-dev-server --open --hot",
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KirIgor/semantic-phonetic-analysis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KirIgor/semantic-phonetic-analysis/issues"
+  },
+  "homepage": "https://github.com/KirIgor/semantic-phonetic-analysis#readme"
+}

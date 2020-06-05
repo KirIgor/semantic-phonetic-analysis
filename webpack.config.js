@@ -11,7 +11,7 @@ module.exports = {
   plugins: [
     new CKEditorWebpackPlugin({
       // The main language that will be built into the main bundle.
-      language: "ru"
+      language: "ru",
 
       // Additional languages that will be emitted to the `outputDirectory`.
       // This option can be set to an array of language codes or `'all'` to build all found languages.
@@ -31,14 +31,14 @@ module.exports = {
       // verbose: true
     }),
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
-    })
+      template: "./src/index.html",
+    }),
     // Other webpack plugins...
   ],
 
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
   },
 
   module: {
@@ -47,17 +47,17 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: "babel-loader",
+        },
       },
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: ["style-loader", "css-loader"]
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-        use: ["raw-loader"]
+        use: ["raw-loader"],
       },
       {
         test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
@@ -65,26 +65,26 @@ module.exports = {
           {
             loader: "style-loader",
             options: {
-              injectType: "singletonStyleTag"
-            }
+              injectType: "singletonStyleTag",
+            },
           },
           {
             loader: "postcss-loader",
             options: styles.getPostCssConfig({
               themeImporter: {
-                themePath: require.resolve("@ckeditor/ckeditor5-theme-lark")
+                themePath: require.resolve("@ckeditor/ckeditor5-theme-lark"),
               },
-              minify: true
-            })
-          }
-        ]
-      }
-    ]
+              minify: true,
+            }),
+          },
+        ],
+      },
+    ],
   },
 
   // Useful for debugging.
   devtool: "source-map",
 
   // By default webpack logs warnings if the bundle is bigger than 200kb.
-  performance: { hints: false }
+  performance: { hints: false },
 };
