@@ -17,7 +17,6 @@ import HighlightComponent from "../components/editor/themes/highlight-component"
 import { fromJS } from "immutable";
 
 import {
-  SET_DATA,
   ADD_THEME,
   ADD_THEMES,
   DELETE_THEMES,
@@ -27,7 +26,7 @@ import {
 } from "../actions/editor";
 
 const initState = {
-  // data: '<?xml version="1.0" encoding="utf-8"?><record><p></p></record>',
+  isEditorLoading: false,
   config: {
     plugins: [
       Essentials,
@@ -60,16 +59,130 @@ const initState = {
           model: "быт",
         },
         {
-          model: "родня",
+          model: "быт--колодец",
+        },
+        {
+          model: "быт--утварь",
+        },
+        {
+          model: "быт--производство муки",
         },
         {
           model: "дом",
         },
         {
+          model: "дом--мебель",
+        },
+        {
+          model: "дом--печь",
+        },
+        {
+          model: "дом--строительство",
+        },
+        {
+          model: "дом--устройство",
+        },
+        {
+          model: "досуг",
+        },
+        {
+          model: "досуг--игры",
+        },
+        {
+          model: "досуг--праздники",
+        },
+        {
+          model: "досуг--свадьба",
+        },
+        {
+          model: "местная топонимика",
+        },
+        {
+          model: "обувь",
+        },
+        {
+          model: "одежда",
+        },
+        {
+          model: "общество",
+        },
+        {
+          model: "общество--алкоголизм",
+        },
+        {
+          model: "общество--названия жителей",
+        },
+        {
+          model: "прошлое",
+        },
+        {
+          model: "война",
+        },
+        {
+          model: "пища",
+        },
+        {
+          model: "пища--хлебопечение",
+        },
+        {
+          model: "напитки",
+        },
+        {
+          model: "работа",
+        },
+        {
+          model: "работа--орудия",
+        },
+        {
+          model: "работа--полевые работы",
+        },
+        {
+          model: "работа--полевые работы--молотьба",
+        },
+        {
+          model: "работа--род занятий",
+        },
+        {
+          model: "растения",
+        },
+        {
+          model: "растения--дикорастущие--деревья и кустарники",
+        },
+        {
+          model: "растения--дикорастущие--травянистые",
+        },
+        {
+          model: "растения--культурные--зерновые",
+        },
+        {
+          model: "растения--культурные--огородные",
+        },
+        {
+          model: "ремесло",
+        },
+        {
+          model: "ремесло--прядение",
+        },
+        {
+          model: "ремесло--ткачество",
+        },
+        {
+          model: "ремесло--пимокатное дело",
+        },
+        {
+          model: "рыболовство",
+        },
+        {
+          model: "рыбы",
+        },
+        {
+          model: "семья--кровное родство",
+        },
+        {
           model: "хозяйство",
         },
         {
-          model: "кровь",
+          model: "хозяйство--животноводство",
         },
       ],
       renderHighlight: (id, domElement) => {

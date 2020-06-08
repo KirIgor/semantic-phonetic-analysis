@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { saveAs } from "file-saver";
+import beautify from "json-beautify";
+import pretty from "pretty";
 import convert from "xml-js";
 
 import Button from "material-ui/RaisedButton";
@@ -15,17 +17,23 @@ const stateToJson = (state) => {
     comment: undefined,
   };
 
-  return JSON.stringify({
-    metadata: {
-      recordLocation,
-      recordDate,
-      source,
-      comment,
-      informants: (state.form.informantsPassports.values || { informants: [] })
-        .informants,
+  return beautify(
+    {
+      metadata: {
+        recordLocation,
+        recordDate,
+        source,
+        comment,
+        informants: (
+          state.form.informantsPassports.values || { informants: [] }
+        ).informants,
+      },
+      record: window.editor.getData(),
     },
-    record: window.editor.getData(),
-  });
+    null,
+    2,
+    100
+  );
 };
 
 const stateToXml = (state) => {
@@ -45,9 +53,6 @@ const stateToXml = (state) => {
   cdata = cdata.replace(/<p>/gi, "");
   cdata = cdata.replace(/<\/p>/gi, "");
 
-  cdata = cdata.replace(/<sup>/gi, "");
-  cdata = cdata.replace(/<\/sup>/gi, "");
-
   cdata = cdata.replace(
     /<span[^>]*tooltip *= *"([^"]*)">/gi,
     '<theme class="$1">'
@@ -64,6 +69,8 @@ const stateToXml = (state) => {
     /<div[^>]*class *= *"interview-item-answer"[^>]*>(.*?)<\/div>/gi,
     "<answer>$1</answer>"
   );
+
+  cdata = pretty(cdata);
 
   const result = {
     declaration: { attributes: { version: "1.0", encoding: "utf-8" } },
@@ -390,7 +397,7 @@ const stateToXml = (state) => {
     ],
   };
 
-  return convert.json2xml(result, { compact: false, spaces: 0 });
+  return convert.json2xml(result, { compact: false, spaces: 2 });
 };
 
 const Save = React.memo(({ form, editor, isJson }) => {
@@ -404,7 +411,11 @@ const Save = React.memo(({ form, editor, isJson }) => {
     saveAs(blob, isJson ? "data.json" : "data.xml");
   }, [form, editor, isJson]);
 
-  return <Button label="Сохранить" onClick={onClick} />;
+  return (
+    <div className="save-container">
+      <Button label="Сохранить" onClick={onClick} style={{ width: "150px" }} />
+    </div>
+  );
 });
 
 const mapStateToProps = ({ form, editor }) => ({

@@ -47,9 +47,29 @@
   min-height: 50px;
 }
 
-.main-paper {
-  padding: 10px;
-  margin-bottom: 20px;
+.main-container {
+  display: flex;
+  height: 500px;
+}
+
+.loading-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+
+.menu-paper {
+}
+
+.form-field {
+  width: 100%;
+}
+
+.item-paper {
+  margin-left: 20px;
+  width: 100%;
+  padding: 20px;
+  overflow-y: scroll;
 }
 
 [tooltip="быт"] {

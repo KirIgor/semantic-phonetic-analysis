@@ -9,13 +9,16 @@ import { List } from "immutable";
 
 import { clearThemes, addThemes } from "../../actions/editor";
 
+import Button from "material-ui/RaisedButton";
+
 const findAllThemes = (text, attribute) => {
   return List(
     Array.from(text.matchAll(new RegExp(`${attribute} *= *"([^"]*)"`, "gi")))
   )
     .map((match) => match[1])
     .toSet()
-    .toArray();
+    .toArray()
+    .sort();
 };
 
 ///////////////JSON//////////////////
@@ -25,7 +28,6 @@ const readJson = (
   change,
   arrayRemoveAll,
   arrayPush,
-  setData,
   clearThemes,
   addThemes
 ) => {
@@ -206,43 +208,68 @@ const informantToForm = (informant) => {
 ///////////////////React/////////////////////
 
 const Load = React.memo(
-  ({ change, arrayRemoveAll, arrayPush, clearThemes, addThemes, isJson }) => {
-    const onChange = React.useCallback(
-      (e) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (isJson) {
-            readJson(
-              reader.result,
-              change,
-              arrayRemoveAll,
-              arrayPush,
-              clearThemes,
-              addThemes
-            );
-          } else {
-            readXml(
-              reader.result,
-              change,
-              arrayRemoveAll,
-              arrayPush,
-              clearThemes,
-              addThemes
-            );
-          }
-        };
-        reader.readAsText(e.target.files[0]);
-      },
-      [change, arrayRemoveAll, arrayPush, isJson]
-    );
+  ({
+    change,
+    arrayRemoveAll,
+    arrayPush,
+    clearThemes,
+    addThemes,
+    isJson,
+    onLoadingFinished,
+  }) => {
+    const onChange = React.useCallback(() => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (isJson) {
+          readJson(
+            reader.result,
+            change,
+            arrayRemoveAll,
+            arrayPush,
+            clearThemes,
+            addThemes
+          );
+        } else {
+          readXml(
+            reader.result,
+            change,
+            arrayRemoveAll,
+            arrayPush,
+            clearThemes,
+            addThemes
+          );
+        }
+        onLoadingFinished();
+      };
+      reader.readAsText(document.getElementById("load-file").files[0]);
+    }, [
+      change,
+      arrayRemoveAll,
+      arrayPush,
+      clearThemes,
+      addThemes,
+      isJson,
+      onLoadingFinished,
+    ]);
 
-    return <input type="file" name="file" onChange={onChange} />;
+    return (
+      <div className="load-container">
+        <input id="load-file" type="file" name="file" />
+        <Button onClick={onChange}>Загрузить</Button>
+      </div>
+    );
   }
 );
 
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { change, arrayRemoveAll, arrayPush, clearThemes, addThemes },
+    {
+      change,
+      arrayRemoveAll,
+      arrayPush,
+      clearThemes,
+      addThemes,
+    },
     dispatch
   );
 

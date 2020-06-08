@@ -9,8 +9,6 @@ import CKEditor from "@ckeditor/ckeditor5-react";
 
 import XmlClassicEditor from "./xml-classic-editor";
 
-import { setData } from "../../actions/editor";
-
 import { makeStyles } from "@material-ui/core/styles";
 
 import "@ckeditor/ckeditor5-build-classic/build/translations/ru.js";
@@ -21,23 +19,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Editor = React.memo(({ data, config, setData }) => {
+const Editor = React.memo(({ config }) => {
   const classes = useStyles();
 
   const editor = React.useRef(null);
   const openModal = React.useCallback(() => setOpened(true), []);
 
-  const onChange = React.useCallback((e, editor) => {
-    setData(editor.getData());
+  const onInit = React.useCallback((editor) => {
+    window.editor = editor;
+    // CKEditorInspector.attach(editor);
   }, []);
-
-  const onInit = React.useCallback(
-    (editor) => {
-      window.editor = editor;
-      // CKEditorInspector.attach(editor);
-    },
-    [setData]
-  );
 
   return (
     <div className={classes.root}>
@@ -54,8 +45,8 @@ const Editor = React.memo(({ data, config, setData }) => {
   );
 });
 
-const mapStateToProps = ({ editor: { data, config } }) => ({ data, config });
-const mapDispatchToProps = (dispatch) =>
-  bindActionCreators({ setData }, dispatch);
+const mapStateToProps = ({ editor: { config } }) => ({
+  config,
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Editor);
+export default connect(mapStateToProps)(Editor);
