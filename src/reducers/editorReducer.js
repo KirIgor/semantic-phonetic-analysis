@@ -26,7 +26,6 @@ import {
 } from "../actions/editor";
 
 const initState = {
-  isEditorLoading: false,
   config: {
     plugins: [
       Essentials,
@@ -50,6 +49,7 @@ const initState = {
       "specialChar5",
       "specialChar6",
       "specialChar7",
+      "highlight",
       "undo",
       "redo",
     ],
@@ -195,9 +195,6 @@ const initState = {
 
 const editorReducer = (state = initState, action) => {
   switch (action.type) {
-    // case SET_DATA: {
-    //   return { config: state.config, data: action.payload };
-    // }
     case ADD_THEMES: {
       let { models } = action.payload;
 

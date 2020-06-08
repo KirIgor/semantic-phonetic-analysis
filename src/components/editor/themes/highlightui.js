@@ -1,14 +1,5 @@
 import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
-
-import Template from "@ckeditor/ckeditor5-ui/src/template";
-
-import Collection from "@ckeditor/ckeditor5-utils/src/collection";
-import Model from "@ckeditor/ckeditor5-ui/src/model";
-
-import {
-  createDropdown,
-  addListToDropdown,
-} from "@ckeditor/ckeditor5-ui/src/dropdown/utils";
+import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
 
 export default class HighlightUI extends Plugin {
   static get pluginName() {
@@ -16,89 +7,45 @@ export default class HighlightUI extends Plugin {
   }
 
   init() {
-    this._openModal = this.editor.config._config["highlight"]["openModal"];
-    const options = this.editor.config.get("highlight.options");
-
-    this._addDropdown(options);
-  }
-
-  _addDropdown(options) {
     const editor = this.editor;
     const t = editor.t;
-    const componentFactory = editor.ui.componentFactory;
 
-    componentFactory.add("highlight", (locale) => {
-      const dropdownView = createDropdown(locale);
+    editor.ui.componentFactory.add("highlight", (locale) => {
+      const view = new ButtonView(locale);
 
-      // Populate the list in the dropdown with items.
-      addListToDropdown(
-        dropdownView,
-        this._getDropdownItemsDefinitions(options)
-      );
-
-      dropdownView.buttonView.set({
-        // The t() function helps localize the editor. All strings enclosed in t() can be
-        // translated and change when the language of the editor changes.
-        label: t("Тема"),
-        tooltip: true,
+      view.set({
+        label: t("Включить/Выключить скобки"),
+        withText: false,
         icon:
-          '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><circle cx="7.2" cy="14.4" r="3.2"/><circle cx="14.8" cy="18" r="2"/><circle cx="15.2" cy="8.8" r="4.8"/></svg>',
-        withText: true,
+          '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><text x="5" y="20"><tspan style="font-size:21px;">[]</tspan></text></svg>',
+        tooltip: true,
       });
 
-      // Execute the command when the dropdown item is clicked (executed).
-      this.listenTo(dropdownView, "execute", (evt) => {
-        if (evt.source.commandParam === "OPEN_MODAL") {
-          this._openModal();
+      this.listenTo(view, "execute", () => {
+        const sheet = [...document.styleSheets].find((sheet) =>
+          [...sheet.cssRules].find(
+            (r) => r.selectorText == ".highlight::before"
+          )
+        );
+        const rules = [...sheet.cssRules];
+
+        const ruleBefore = rules.find(
+          (r) => r.selectorText == `.highlight::before`
+        );
+        const ruleAfter = rules.find(
+          (r) => r.selectorText == `.highlight::after`
+        );
+
+        if (ruleBefore.style["content"] == '"["') {
+          ruleBefore.style.setProperty("content", "");
+          ruleAfter.style.setProperty("content", "");
         } else {
-          editor.execute("highlight", {
-            value: evt.source.commandParam,
-            list: options.map((o) => o.model),
-          });
-          editor.editing.view.focus();
+          ruleBefore.style.setProperty("content", '"["');
+          ruleAfter.style.setProperty("content", '"]"');
         }
       });
 
-      return dropdownView;
+      return view;
     });
-  }
-
-  _getDropdownItemsDefinitions(options) {
-    const itemDefinitions = new Collection();
-
-    for (const option of options) {
-      const definition = {
-        type: "button",
-        model: new Model({
-          commandParam: option.model,
-          label: option.model,
-          withText: true,
-        }),
-      };
-
-      // Add the item definition to the collection.
-      itemDefinitions.add(definition);
-    }
-
-    itemDefinitions.add({
-      type: "button",
-      model: new Model({
-        commandParam: "OPEN_MODAL",
-        icon:
-          '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>',
-        label: "редактировать",
-        withText: true,
-      }),
-    });
-
-    itemDefinitions.add({
-      type: "button",
-      model: new Model({
-        label: "стереть",
-        withText: true,
-      }),
-    });
-
-    return itemDefinitions;
   }
 }

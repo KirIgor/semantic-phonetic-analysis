@@ -10,6 +10,8 @@ import AlertTemplate from "react-alert-template-basic";
 import store from "./store";
 import App from "./App.js";
 
+import ErrorBoundary from "./error-boundary";
+
 const alertOptions = {
   position: positions.BOTTOM_CENTER,
   timeout: 5000,
@@ -24,7 +26,9 @@ ReactDOM.render(
   <AlertProvider template={AlertTemplate} {...alertOptions}>
     <Provider store={store}>
       <MuiThemeProvider>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </MuiThemeProvider>
     </Provider>
   </AlertProvider>,

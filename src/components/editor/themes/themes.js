@@ -101,7 +101,7 @@ const Themes = React.memo(
       window.editor.execute("highlight", {
         list: themes.map((t) => t.model),
       });
-    }, []);
+    }, [themes]);
 
     const addThemeToSelectedText = React.useCallback(
       (theme) => () => {
