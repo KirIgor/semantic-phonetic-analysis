@@ -29,7 +29,7 @@
     "@ckeditor/ckeditor5-paragraph": "^19.1.0",
     "@ckeditor/ckeditor5-react": "^2.1.0",
     "@ckeditor/ckeditor5-theme-lark": "^19.1.0",
-    "@ckeditor/ckeditor5-widget": "^19.1.0",
+    "@ckeditor/ckeditor5-widget": "^27.0.0",
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
     "babel-loader": "^8.1.0",
